@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import env from "react-dotenv";
 
 import styled from "styled-components";
@@ -21,10 +21,8 @@ const App = () => {
   const [triggers, setTriggers] = useState([]);
   const [actions, setActions] = useState([]);
 
-  // const SocketContext = createContext(socket);
-
   const requestTapData = () => {
-    socket.emit("requestTapData");
+    socket.emit("requestData");
   };
 
   useEffect(() => {
@@ -35,27 +33,26 @@ const App = () => {
       requestTapData();
     });
 
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
-      setSocketConnected(false);
-    });
-
-    socket.on("tapUpdate", (data) => {
+    socket.on("data", (data) => {
       console.log(data);
       setTriggers(data.triggers);
       setActions(data.actions);
     });
 
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      setSocketConnected(false);
+    });
+
     return () => {
       socket.off("connect");
-      socket.off("tapUpdate");
+      socket.off("data");
       socket.off("disconnect");
     };
   }, []);
 
   return (
     <Wrapper>
-      {/* <SocketContext.Provider> */}
       <DebugInfo
         socket={socket}
         connected={socketConnected}
@@ -64,7 +61,6 @@ const App = () => {
       />
       <FloorPlan />
       <RuleInterpreter triggers={triggers} actions={actions} />
-      {/* </SocketContext.Provider> */}
     </Wrapper>
   );
 };

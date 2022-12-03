@@ -16,6 +16,25 @@ app.use(cors());
 
 const PORT = 4949;
 
+const EMPTY_TRIGGER_ACTION_DATA = {
+  who: "",
+  what: "nothing",
+  where: "",
+};
+
+let triggers = [EMPTY_TRIGGER_ACTION_DATA];
+let actions = [EMPTY_TRIGGER_ACTION_DATA];
+
+const logData = () => {
+  console.log("DATA: ", { triggers, actions });
+};
+
+const sendDataUpdate = () => {
+  io.emit("data", { triggers: triggers, actions: actions });
+  console.log(`Sent data update to all clients.`);
+};
+setInterval(() => logData(), 1000);
+
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
@@ -23,9 +42,50 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log(`a user connected`);
 
-  socket.onAny((event, args) => {
-    console.log(`Broadcast: ${event}`);
-    io.emit(event, args);
+  socket.on("requestData", () => sendDataUpdate());
+
+  socket.on("updateData", (data) => {
+    triggers = data.triggers;
+    actions = data.actions;
+
+    console.log("Triggers and Actions updated!", data);
+    sendDataUpdate();
+  });
+
+  socket.on("addNewTrigger", () => {
+    console.log("Trigger added!");
+    triggers = [...triggers, EMPTY_TRIGGER_ACTION_DATA];
+
+    sendDataUpdate();
+  });
+
+  socket.on("addNewAction", () => {
+    console.log("Action added!");
+    actions = [...actions, EMPTY_TRIGGER_ACTION_DATA];
+
+    sendDataUpdate();
+  });
+
+  socket.on("removeTrigger", (index) => {
+    console.log(`Trigger ${index} removed!`);
+    let copy = [...triggers];
+    copy.splice(index, 1);
+    triggers = copy;
+
+    sendDataUpdate();
+  });
+
+  socket.on("removeAction", (index) => {
+    console.log(`Action ${index} removed!`);
+    let copy = [...actions];
+    copy.splice(index, 1);
+    actions = copy;
+
+    sendDataUpdate();
+  });
+
+  socket.on("disconnect", () => {
+    console.log("a user disconnected");
   });
 });
 

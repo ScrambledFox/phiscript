@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+
 import env from "react-dotenv";
 import { io } from "socket.io-client";
 
@@ -17,26 +19,44 @@ const Wrapper = styled.div`
 
 const socket = io(env.SOCKET_URL);
 
-export const EMPTY_TRIGGER_ACTION_DATA = {
-  who: "",
-  what: "nothing",
-  where: "",
-};
-
 const DataPanel = styled.div`
   margin: 25px;
 `;
 
 const App = () => {
-  const [socketConnected, setSocketConnected] = useState(false);
+  const dispatch = useDispatch();
 
-  const [triggers, setTriggers] = useState([EMPTY_TRIGGER_ACTION_DATA]);
-  const [actions, setActions] = useState([EMPTY_TRIGGER_ACTION_DATA]);
+  const updateDataOnEnter = ({ key }) => {
+    if (key !== "Enter") return;
+
+    console.log("Updating data!", new Date().getTime(), {
+      triggers: triggers,
+      actions: actions,
+    });
+
+    socket.emit("updateData", { triggers: triggers, actions: actions });
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", updateDataOnEnter);
+
+    return () => {
+      document.removeEventListener("keydown", updateDataOnEnter);
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Socket connected");
       setSocketConnected(true);
+
+      socket.emit("requestData");
+    });
+
+    socket.on("data", (data) => {
+      console.log("Updated data received:", data);
+      setTriggers(data.triggers);
+      setActions(data.actions);
     });
 
     socket.on("disconnect", () => {
@@ -44,15 +64,9 @@ const App = () => {
       setSocketConnected(false);
     });
 
-    socket.on("requestTapData", () => {
-      socket.emit("tapUpdate", { triggers: triggers, actions: actions });
-    });
-
     return () => {
       socket.off("connect");
-
-      socket.off("tapUpdate");
-
+      socket.off("data");
       socket.off("disconnect");
     };
   }, []);
