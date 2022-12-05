@@ -3,6 +3,10 @@ import styled from "styled-components";
 
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiFillMinusCircle } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { setData } from "../../redux/dataSlice";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Wrapper = styled.div``;
 
@@ -10,91 +14,206 @@ const InputWrapper = styled.div`
   display: block;
 `;
 
-const TapInput = ({  }) => {
-  return <InputWrapper></InputWrapper>;
+const AddButton = styled.span`
+  margin: 6px;
+`;
+
+const RemoveButton = styled.span`
+  margin-left: 10px;
+`;
+
+const TapInput = ({ type, index, param, value, data, setData, clear }) => {
+  const [val, setVal] = useState("");
+
+  useEffect(() => {
+    setVal("");
+  }, [clear]);
+
+  const handleChange = (e) => {
+    setVal(e.target.value);
+
+    setData({
+      ...data,
+      [type]: data[type].map((item, _index) => {
+        if (_index !== index) return item;
+        return { ...item, [param]: e.target.value };
+      }),
+    });
+  };
+
+  return (
+    <input
+      type="text"
+      placeholder={value}
+      value={val}
+      onChange={handleChange}
+    />
+  );
 };
 
-const TapControl = ({ socket, triggers, actions, setTriggers, setActions }) => {
+const TapControl = () => {
+  const dispatch = useDispatch();
+
+  const network = useSelector((state) => state.network);
+  const data = useSelector((state) => state.data);
+
+  const [localData, setLocalData] = useState({ triggers: [], actions: [] });
+  const [clearInputs, setClearInputs] = useState(false);
+
+  useEffect(() => {
+    setLocalData({ triggers: data.triggers, actions: data.actions });
+  }, [data]);
+
   const addNewTrigger = () => {
-    socket.emit("addNewTrigger");
+    network.socket.emit("addNewTrigger");
   };
 
   const addNewAction = () => {
-    socket.emit("addNewAction");
+    network.socket.emit("addNewAction");
   };
 
   const removeTrigger = (index) => {
-    socket.emit("removeTrigger", index);
+    network.socket.emit("removeTrigger", index);
   };
 
   const removeAction = (index) => {
-    socket.emit("removeAction", index);
+    network.socket.emit("removeAction", index);
   };
 
-  const handleChange = (event) => {
-    let copy = { triggers: [...triggers], actions: [...actions] };
+  const sendDataUpdate = (e) => {
+    e.preventDefault();
 
-    copy[event.target.dataset.type][event.target.dataset.index][
-      event.target.dataset.param
-    ] = event.target.value;
+    console.log("Local", localData);
+    console.log("Global", { triggers: data.triggers, actions: data.actions });
 
-    console.log("copy", copy);
+    setClearInputs(!clearInputs);
 
-    setTriggers(copy.triggers);
-    setActions(copy.actions);
+    network.socket.emit("updateData", {
+      triggers: localData.triggers,
+      actions: localData.actions,
+    });
   };
-
-  let triggersInputs = [];
-  for (let i = 0; i < triggers.length; i++) {
-    const trigger = triggers[i];
-    triggersInputs.push(
-      <TapInput
-        type={"triggers"}
-        index={i}
-        param={"what"}
-        value={trigger.what}
-      />
-    );
-  }
-
-  let actionsInputs = [];
-  for (let i = 0; i < actions.length; i++) {
-    const action = actions[i];
-    actionsInputs.push(
-      <TapInput type={"actions"} index={i} param={"what"} value={action.what} />
-    );
-  }
 
   return (
     <Wrapper>
-      <div>
-        Triggers:
-        {triggersInputs}
-        Actions:
-        {actionsInputs}
-      </div>
+      <form onSubmit={sendDataUpdate}>
+        <div>
+          <div>
+            Triggers:
+            {data.triggers.map((item, _index) => {
+              return (
+                <InputWrapper>
+                  <TapInput
+                    type={"triggers"}
+                    index={_index}
+                    param={"who"}
+                    value={item.who}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <TapInput
+                    type={"triggers"}
+                    index={_index}
+                    param={"what"}
+                    value={item.what}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <TapInput
+                    type={"triggers"}
+                    index={_index}
+                    param={"where"}
+                    value={item.where}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <RemoveButton>
+                    <AiFillMinusCircle
+                      color="red"
+                      onClick={() => removeTrigger(_index)}
+                    />
+                  </RemoveButton>
+                </InputWrapper>
+              );
+            })}
+            <AddButton>
+              <BsFillPlusCircleFill color="green" onClick={addNewTrigger} />
+            </AddButton>
+          </div>
+          <div>
+            Actions:
+            {data.actions.map((item, _index) => {
+              return (
+                <InputWrapper>
+                  <TapInput
+                    type={"actions"}
+                    index={_index}
+                    param={"who"}
+                    value={item.who}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <TapInput
+                    type={"actions"}
+                    index={_index}
+                    param={"what"}
+                    value={item.what}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <TapInput
+                    type={"actions"}
+                    index={_index}
+                    param={"where"}
+                    value={item.where}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
+                  <RemoveButton>
+                    <AiFillMinusCircle
+                      color="red"
+                      onClick={() => removeAction(_index)}
+                    />
+                  </RemoveButton>
+                </InputWrapper>
+              );
+            })}
+            <AddButton>
+              <BsFillPlusCircleFill color="green" onClick={addNewAction} />
+            </AddButton>
+          </div>
+        </div>
+
+        <button>Send Changes</button>
+      </form>
 
       <div>
-        Triggers: {triggers.length}
-        Actions: {actions.length}
+        <p>Trigger count: {data.triggers.length}</p>
+        <p>Action count: {data.actions.length}</p>
       </div>
       <div>
-        Triggers:
-        {triggers.map((trigger, i) => (
+        <b>Triggers:</b>
+        {data.triggers.map((trigger, i) => (
           <div key={i}>
-            <p>{trigger.who}</p>
-            <p>{trigger.what}</p>
-            <p>{trigger.where}</p>
+            <p>Who: {trigger.who}</p>
+            <p>What: {trigger.what}</p>
+            <p>Where: {trigger.where}</p>
           </div>
         ))}
       </div>
       <div>
-        Actions:
-        {actions.map((action, i) => (
+        <b>Actions:</b>
+        {data.actions.map((action, i) => (
           <div key={i}>
-            <p>{action.who}</p>
-            <p>{action.what}</p>
-            <p>{action.where}</p>
+            <p>Who: {action.who}</p>
+            <p>What: {action.what}</p>
+            <p>Where: {action.where}</p>
           </div>
         ))}
       </div>
