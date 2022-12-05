@@ -21,6 +21,8 @@ const App = () => {
   const [triggers, setTriggers] = useState([]);
   const [actions, setActions] = useState([]);
 
+  const [isDirty, setIsDirty] = useState(false);
+
   const requestTapData = () => {
     socket.emit("requestData");
   };
@@ -37,6 +39,7 @@ const App = () => {
       console.log(data);
       setTriggers(data.triggers);
       setActions(data.actions);
+      setIsDirty(data.isDirty);
     });
 
     socket.on("disconnect", () => {
@@ -60,7 +63,11 @@ const App = () => {
         actions={actions}
       />
       <FloorPlan />
-      <RuleInterpreter triggers={triggers} actions={actions} />
+      <RuleInterpreter
+        triggers={triggers}
+        actions={actions}
+        isDirty={isDirty}
+      />
     </Wrapper>
   );
 };

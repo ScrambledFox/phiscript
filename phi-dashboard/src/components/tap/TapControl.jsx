@@ -4,9 +4,11 @@ import styled from "styled-components";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { setData } from "../../redux/dataSlice";
+import { setData, setIsDirty } from "../../redux/dataSlice";
 import { useState } from "react";
 import { useEffect } from "react";
+
+import { Puff } from "react-loader-spinner";
 
 const Wrapper = styled.div``;
 
@@ -23,6 +25,10 @@ const RemoveButton = styled.span`
 `;
 
 const TapInput = ({ type, index, param, value, data, setData, clear }) => {
+  const dispatch = useDispatch();
+
+  const isDirty = useSelector((state) => state.data.isDirty);
+
   const [val, setVal] = useState("");
 
   useEffect(() => {
@@ -31,6 +37,8 @@ const TapInput = ({ type, index, param, value, data, setData, clear }) => {
 
   const handleChange = (e) => {
     setVal(e.target.value);
+
+    if (!isDirty) dispatch(setIsDirty(true));
 
     setData({
       ...data,
@@ -57,6 +65,8 @@ const TapControl = () => {
   const network = useSelector((state) => state.network);
   const data = useSelector((state) => state.data);
 
+  const isDirty = useSelector((state) => state.data.isDirty);
+
   const [localData, setLocalData] = useState({ triggers: [], actions: [] });
   const [clearInputs, setClearInputs] = useState(false);
 
@@ -66,18 +76,26 @@ const TapControl = () => {
 
   const addNewTrigger = () => {
     network.socket.emit("addNewTrigger");
+
+    if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const addNewAction = () => {
     network.socket.emit("addNewAction");
+
+    if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const removeTrigger = (index) => {
     network.socket.emit("removeTrigger", index);
+
+    if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const removeAction = (index) => {
     network.socket.emit("removeAction", index);
+
+    if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const sendDataUpdate = (e) => {
@@ -88,6 +106,8 @@ const TapControl = () => {
 
     setClearInputs(!clearInputs);
 
+    dispatch(setIsDirty(false));
+
     network.socket.emit("updateData", {
       triggers: localData.triggers,
       actions: localData.actions,
@@ -96,6 +116,11 @@ const TapControl = () => {
 
   return (
     <Wrapper>
+      {isDirty && (
+        <div>
+          <Puff />
+        </div>
+      )}
       <form onSubmit={sendDataUpdate}>
         <div>
           <div>
@@ -192,31 +217,6 @@ const TapControl = () => {
 
         <button>Send Changes</button>
       </form>
-
-      <div>
-        <p>Trigger count: {data.triggers.length}</p>
-        <p>Action count: {data.actions.length}</p>
-      </div>
-      <div>
-        <b>Triggers:</b>
-        {data.triggers.map((trigger, i) => (
-          <div key={i}>
-            <p>Who: {trigger.who}</p>
-            <p>What: {trigger.what}</p>
-            <p>Where: {trigger.where}</p>
-          </div>
-        ))}
-      </div>
-      <div>
-        <b>Actions:</b>
-        {data.actions.map((action, i) => (
-          <div key={i}>
-            <p>Who: {action.who}</p>
-            <p>What: {action.what}</p>
-            <p>Where: {action.where}</p>
-          </div>
-        ))}
-      </div>
     </Wrapper>
   );
 };

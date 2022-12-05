@@ -25,12 +25,14 @@ const EMPTY_TRIGGER_ACTION_DATA = {
 let triggers = [EMPTY_TRIGGER_ACTION_DATA];
 let actions = [EMPTY_TRIGGER_ACTION_DATA];
 
+let isDirty = false;
+
 const logData = () => {
-  console.log("DATA: ", { triggers, actions });
+  console.log("DATA: ", { triggers, actions, isDirty });
 };
 
 const sendDataUpdate = () => {
-  io.emit("data", { triggers: triggers, actions: actions });
+  io.emit("data", { triggers: triggers, actions: actions, isDirty: isDirty });
   console.log(`Sent data update to all clients.`);
 };
 setInterval(() => logData(), 1000);
@@ -80,6 +82,20 @@ io.on("connection", (socket) => {
     let copy = [...actions];
     copy.splice(index, 1);
     actions = copy;
+
+    sendDataUpdate();
+  });
+
+  socket.on("markDirty", () => {
+    console.log("Data is marked dirty!");
+    isDirty = true;
+
+    sendDataUpdate();
+  });
+
+  socket.on("markClean", () => {
+    console.log("Data is marked clean!");
+    isDirty = false;
 
     sendDataUpdate();
   });

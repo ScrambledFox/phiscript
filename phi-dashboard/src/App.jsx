@@ -32,6 +32,12 @@ const App = () => {
   const data = useSelector((state) => state.data);
   const isConnected = useSelector((state) => state.network.isConnected);
 
+  const isDirty = useSelector((state) => state.data.isDirty);
+
+  useEffect(() => { 
+    socket.emit( isDirty ? "markDirty" : "markClean");
+  }, [isDirty])
+
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Socket connected");

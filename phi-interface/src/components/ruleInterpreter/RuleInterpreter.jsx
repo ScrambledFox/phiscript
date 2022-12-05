@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { Puff } from "react-loader-spinner";
+
 // **[IF] (I) (enter) (a room), [THEN] (turn on) (the lights) (in that room).**
 //      *[TRIGGER] (Who) (What) (Where), [ACTION] (What) (Which) (Where)*
 
@@ -47,37 +49,49 @@ const Variable = styled.span`
   }
 `;
 
-const RuleInterpreter = ({ triggers, actions }) => {
+const Loading = styled.div`
+  width: 80px;
+  margin: auto;
+`;
+
+const RuleInterpreter = ({ triggers, actions, isDirty }) => {
   return (
     <BodyWrapper>
       <TextWrapper>
         <Descriptor>Current Rule:</Descriptor>
-        <Line>
-          {triggers.map((trigger, i) => (
-            <>
-              {i !== 0 && " and "}
-              <Trigger
-                key={i}
-                capatilize={i == 0}
-                who={trigger.who}
-                what={trigger.what}
-                where={trigger.where}
-              />
-            </>
-          ))}{" "}
-          {actions.map((action, i) => (
-            <>
-              {i !== 0 && " and "}
-              <Action
-                key={i}
-                who={action.who}
-                what={action.what}
-                where={action.where}
-              />
-              {i == actions.length - 1 && "."}
-            </>
-          ))}
-        </Line>
+        {isDirty && (
+          <Loading>
+            <Puff color="white" height={"80"} width={"80"} />
+          </Loading>
+        )}
+        {!isDirty && (
+          <Line>
+            {triggers.map((trigger, i) => (
+              <>
+                {i !== 0 && " and "}
+                <Trigger
+                  key={i}
+                  capatilize={i == 0}
+                  who={trigger.who}
+                  what={trigger.what}
+                  where={trigger.where}
+                />
+              </>
+            ))}{" "}
+            {actions.map((action, i) => (
+              <>
+                {i !== 0 && " and "}
+                <Action
+                  key={i}
+                  who={action.who}
+                  what={action.what}
+                  where={action.where}
+                />
+                {i == actions.length - 1 && "."}
+              </>
+            ))}
+          </Line>
+        )}
       </TextWrapper>
     </BodyWrapper>
   );
