@@ -37,9 +37,6 @@ const TapInput = ({ type, index, param, value, data, setData, clear }) => {
 
   const handleChange = (e) => {
     setVal(e.target.value);
-
-    if (!isDirty) dispatch(setIsDirty(true));
-
     setData({
       ...data,
       [type]: data[type].map((item, _index) => {
@@ -47,6 +44,8 @@ const TapInput = ({ type, index, param, value, data, setData, clear }) => {
         return { ...item, [param]: e.target.value };
       }),
     });
+
+    if (!isDirty) dispatch(setIsDirty(true));
   };
 
   return (
@@ -59,12 +58,10 @@ const TapInput = ({ type, index, param, value, data, setData, clear }) => {
   );
 };
 
-const TapControl = () => {
+const TapControl = ({ socket }) => {
   const dispatch = useDispatch();
 
-  const network = useSelector((state) => state.network);
   const data = useSelector((state) => state.data);
-
   const isDirty = useSelector((state) => state.data.isDirty);
 
   const [localData, setLocalData] = useState({ triggers: [], actions: [] });
@@ -75,25 +72,25 @@ const TapControl = () => {
   }, [data]);
 
   const addNewTrigger = () => {
-    network.socket.emit("addNewTrigger");
+    socket.emit("addNewTrigger");
 
     if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const addNewAction = () => {
-    network.socket.emit("addNewAction");
+    socket.emit("addNewAction");
 
     if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const removeTrigger = (index) => {
-    network.socket.emit("removeTrigger", index);
+    socket.emit("removeTrigger", index);
 
     if (!isDirty) dispatch(setIsDirty(true));
   };
 
   const removeAction = (index) => {
-    network.socket.emit("removeAction", index);
+    socket.emit("removeAction", index);
 
     if (!isDirty) dispatch(setIsDirty(true));
   };
@@ -101,17 +98,13 @@ const TapControl = () => {
   const sendDataUpdate = (e) => {
     e.preventDefault();
 
-    console.log("Local", localData);
-    console.log("Global", { triggers: data.triggers, actions: data.actions });
-
-    setClearInputs(!clearInputs);
-
-    dispatch(setIsDirty(false));
-
-    network.socket.emit("updateData", {
+    socket.emit("updateData", {
       triggers: localData.triggers,
       actions: localData.actions,
     });
+
+    setClearInputs(!clearInputs);
+    dispatch(setIsDirty(false));
   };
 
   return (
@@ -127,7 +120,7 @@ const TapControl = () => {
             Triggers:
             {data.triggers.map((item, _index) => {
               return (
-                <InputWrapper>
+                <InputWrapper key={_index}>
                   <TapInput
                     type={"triggers"}
                     index={_index}
@@ -155,6 +148,15 @@ const TapControl = () => {
                     setData={setLocalData}
                     clear={clearInputs}
                   />
+                  <TapInput
+                    type={"triggers"}
+                    index={_index}
+                    param={"connectorWord"}
+                    value={item.connectorWord}
+                    data={localData}
+                    setData={setLocalData}
+                    clear={clearInputs}
+                  />
                   <RemoveButton>
                     <AiFillMinusCircle
                       color="red"
@@ -172,7 +174,7 @@ const TapControl = () => {
             Actions:
             {data.actions.map((item, _index) => {
               return (
-                <InputWrapper>
+                <InputWrapper key={_index}>
                   <TapInput
                     type={"actions"}
                     index={_index}

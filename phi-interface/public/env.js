@@ -1,3 +1,3 @@
 window.env = {
-  "SOCKET_URL": "http://localhost:4949/"
+  "SOCKET_URL": "localhost:4949"
 };

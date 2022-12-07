@@ -36,7 +36,7 @@ const App = () => {
     });
 
     socket.on("data", (data) => {
-      console.log(data);
+      console.log("Got new data from server!");
       setTriggers(data.triggers);
       setActions(data.actions);
       setIsDirty(data.isDirty);

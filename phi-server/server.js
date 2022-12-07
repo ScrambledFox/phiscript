@@ -16,56 +16,70 @@ app.use(cors());
 
 const PORT = 4949;
 
-const EMPTY_TRIGGER_ACTION_DATA = {
+const EMPTY_TRIGGER_DATA = {
+  who: "",
+  what: "nothing",
+  where: "",
+  connectorWord: "and",
+};
+
+const EMPTY_ACTION_DATA = {
   who: "",
   what: "nothing",
   where: "",
 };
 
-let triggers = [EMPTY_TRIGGER_ACTION_DATA];
-let actions = [EMPTY_TRIGGER_ACTION_DATA];
-
+let triggers = [EMPTY_TRIGGER_DATA];
+let actions = [EMPTY_ACTION_DATA];
 let isDirty = false;
 
 const logData = () => {
   console.log("DATA: ", { triggers, actions, isDirty });
 };
 
-const sendDataUpdate = () => {
-  io.emit("data", { triggers: triggers, actions: actions, isDirty: isDirty });
+const sendDataUpdate = (updateEvent) => {
+  io.emit("data", {
+    updateEvent,
+    triggers: triggers,
+    actions: actions,
+    isDirty: isDirty,
+  });
   console.log(`Sent data update to all clients.`);
 };
-setInterval(() => logData(), 1000);
+
+const sendDirtyFlag = () => {
+  io.emit("isDirty", isDirty);
+  console.log(`Sent isDirty ${isDirty} flag!`);
+};
 
 app.get("/", (req, res) => {
-  res.sendStatus(200);
+  res.send({ triggers: triggers, actions: actions, isDirty: isDirty });
 });
 
 io.on("connection", (socket) => {
   console.log(`a user connected`);
 
-  socket.on("requestData", () => sendDataUpdate());
+  socket.on("requestData", () => sendDataUpdate("requested"));
 
   socket.on("updateData", (data) => {
     triggers = data.triggers;
     actions = data.actions;
 
     console.log("Triggers and Actions updated!", data);
-    sendDataUpdate();
   });
 
   socket.on("addNewTrigger", () => {
     console.log("Trigger added!");
-    triggers = [...triggers, EMPTY_TRIGGER_ACTION_DATA];
+    triggers = [...triggers, EMPTY_TRIGGER_DATA];
 
-    sendDataUpdate();
+    sendDataUpdate("amountChange");
   });
 
   socket.on("addNewAction", () => {
     console.log("Action added!");
-    actions = [...actions, EMPTY_TRIGGER_ACTION_DATA];
+    actions = [...actions, EMPTY_ACTION_DATA];
 
-    sendDataUpdate();
+    sendDataUpdate("amountChange");
   });
 
   socket.on("removeTrigger", (index) => {
@@ -74,7 +88,7 @@ io.on("connection", (socket) => {
     copy.splice(index, 1);
     triggers = copy;
 
-    sendDataUpdate();
+    sendDataUpdate("amountChange");
   });
 
   socket.on("removeAction", (index) => {
@@ -83,21 +97,21 @@ io.on("connection", (socket) => {
     copy.splice(index, 1);
     actions = copy;
 
-    sendDataUpdate();
+    sendDataUpdate("amountChange");
   });
 
   socket.on("markDirty", () => {
     console.log("Data is marked dirty!");
     isDirty = true;
 
-    sendDataUpdate();
+    sendDataUpdate("dirtied");
   });
 
   socket.on("markClean", () => {
     console.log("Data is marked clean!");
     isDirty = false;
 
-    sendDataUpdate();
+    sendDataUpdate("cleaned");
   });
 
   socket.on("disconnect", () => {

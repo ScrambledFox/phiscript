@@ -6,29 +6,10 @@ import { Puff } from "react-loader-spinner";
 // **[IF] (I) (enter) (a room), [THEN] (turn on) (the lights) (in that room).**
 //      *[TRIGGER] (Who) (What) (Where), [ACTION] (What) (Which) (Where)*
 
-const BodyWrapper = styled.div`
-  position: absolute;
-
-  bottom: 0;
-  left: 0;
-
-  height: 25vh;
-  width: 100vw;
-
-  background: black;
-  background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 75%,
-    rgba(0, 0, 0, 0) 100%
-  );
-`;
+const BodyWrapper = styled.div``;
 
 const TextWrapper = styled.div`
-  text-align: center;
   font-size: 2em;
-
-  margin: 50px 0;
 `;
 
 const Line = styled.span``;
@@ -41,12 +22,9 @@ const Decorator = styled.span``;
 
 const Variable = styled.span`
   transition: 0.5s;
-
   border-radius: 10px;
 
   &:hover {
-    font-size: 120%;
-
     border: 1px solid white;
     padding: 5px;
     margin: 5px;
