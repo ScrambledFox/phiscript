@@ -1,0 +1,44 @@
+{
+    "prompts": [
+        {
+            "prompt": "At 09:00",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "At the end of the morning",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "At the end of the day",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "In August",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "At the end of the year",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "When I come home",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "Next year",
+            "pointsNeeded": 1
+        },
+        {
+            "prompt": "During the workday",
+            "pointsNeeded": 2
+        },
+        {
+            "prompt": "During summer",
+            "pointsNeeded": 2
+        },
+        {
+            "prompt": "When I'm at work",
+            "pointsNeeded": 2
+        }
+    ]
+}
