@@ -1,42 +1,52 @@
 {
     "prompts": [
         {
+            "type": "temporal",
             "prompt": "At 09:00",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "At the end of the morning",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "At the end of the day",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "In August",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "At the end of the year",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "When I come home",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "Next year",
             "pointsNeeded": 1
         },
         {
+            "type": "temporal",
             "prompt": "During the workday",
             "pointsNeeded": 2
         },
         {
+            "type": "temporal",
             "prompt": "During summer",
             "pointsNeeded": 2
         },
         {
+            "type": "temporal",
             "prompt": "When I'm at work",
             "pointsNeeded": 2
         }

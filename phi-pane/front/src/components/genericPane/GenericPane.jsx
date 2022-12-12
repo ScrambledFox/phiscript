@@ -54,23 +54,23 @@ const GenericPane = () => {
 
     dispatch(
       addPoint({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: (e.clientX - rect.left) / 1000,
+        y: (e.clientY - rect.top) / 600,
       })
     );
   };
 
   return (
     <Wrapper>
-      <div style={{ width: "100", height: "100%" }} onClick={onClick} />
+      <div style={{ width: "100%", height: "100%" }} onClick={onClick} />
       {researchData.points.map((point, _index) => {
         return (
           <Point
             key={point.index}
             showIndex={researchData.currentPrompt.pointsNeeded > 1}
             i={point.index}
-            x={point.x}
-            y={point.y}
+            x={point.x * 1000}
+            y={point.y * 600}
           />
         );
       })}

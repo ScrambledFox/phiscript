@@ -55,12 +55,11 @@ const ResearchPane = () => {
       },
     });
 
-    if (researchData.currentPromptIndex + 1 > ResearchPrompts.prompts.length) {
+    if (researchData.currentPromptIndex + 1 >= ResearchPrompts.prompts.length) {
       dispatch(setResearchDone());
-      return;
+    } else {
+      dispatch(nextPrompt());
     }
-
-    dispatch(nextPrompt());
   };
 
   const getInstruction = () => {
@@ -81,21 +80,40 @@ const ResearchPane = () => {
 
   useEffect(() => {
     setInstruction(getInstruction());
-  });
+  }, [getInstruction]);
 
   return (
     <Wrapper>
-      <Prompt>{ researchData.currentPromptIndex === 0 ? `"${researchData.currentPrompt.prompt}"` : "Situation will be listed here." }</Prompt>
-      <Instruction>{ researchData.currentPromptIndex === 0 ? instruction : "Instruction will be listed here. Try placing a few points and click on 'submit' when ready to continue." }</Instruction>
-      <GenericPane />
-      <Buttons>
-        <button className="btn" onClick={onResetPoints}>
-          Reset Points
-        </button>
-        <Submit className="btn" onClick={onSubmit}>
-          Submit
-        </Submit>
-      </Buttons>
+      {!researchData.researchDone ? (
+        <>
+          <Prompt>
+            {researchData.currentPromptIndex === -1
+              ? "Situation will be listed here."
+              : `"${researchData.currentPrompt.prompt}"`}
+          </Prompt>
+          <Instruction>
+            {researchData.currentPromptIndex === -1
+              ? "Instruction will be listed here. Try placing a few points and click on 'submit' when ready to continue."
+              : instruction}
+          </Instruction>
+          <GenericPane />
+          <Buttons>
+            <button className="btn" onClick={onResetPoints}>
+              Reset Points
+            </button>
+            <Submit className="btn" onClick={onSubmit}>
+              Submit
+            </Submit>
+          </Buttons>
+        </>
+      ) : (
+        <>
+          <h1>🎉Finished!🥳</h1>
+          <h2>
+            You can now close this page and continue with the questionnaire.
+          </h2>
+        </>
+      )}
     </Wrapper>
   );
 };

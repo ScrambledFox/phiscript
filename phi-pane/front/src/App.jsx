@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
 import styled from "styled-components";
-import GenericPane from "./components/genericPane/GenericPane";
 import IntroForm from "./components/introForm/IntroForm";
 import ResearchPane from "./components/research/Research";
 
