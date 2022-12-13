@@ -12,6 +12,7 @@ import {
 } from "../../redux/researchSlice";
 
 import { socket } from "../../service/socket";
+import { useSnackbar } from "notistack";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -36,6 +37,8 @@ const Submit = styled.button`
 const ResearchPane = () => {
   const dispatch = useDispatch();
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const participantData = useSelector((state) => state.participant);
   const researchData = useSelector((state) => state.research);
 
@@ -46,6 +49,16 @@ const ResearchPane = () => {
   };
 
   const onSubmit = () => {
+    if (
+      researchData.currentPromptIndex >= 0 &&
+      researchData.points.length !== researchData.currentPrompt.pointsNeeded
+    ) {
+      enqueueSnackbar(
+        `Please place ${researchData.currentPrompt.pointsNeeded} points!`
+      );
+      return;
+    }
+
     socket.emit("processData", {
       participantId: participantData.id,
       promptIndex: researchData.currentPromptIndex,

@@ -56,6 +56,10 @@ io.on("connection", (socket) => {
   socket.emit("ping", "hello front");
 });
 
+app.get("/health", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });

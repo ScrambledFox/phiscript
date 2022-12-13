@@ -7,12 +7,20 @@ import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
 
 import { Provider } from "react-redux";
+import { SnackbarProvider } from "notistack";
+import { Slide } from "@mui/material";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <SnackbarProvider
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        maxSnack={1}
+        autoHideDuration={5000}
+      >
+        <App />
+      </SnackbarProvider>
     </Provider>
   </React.StrictMode>
 );

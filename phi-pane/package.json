@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm install && npm --prefix ./front/ install && npm --prefix ./front/ run build",
     "start": "node back/index.js"
   },
   "author": "Joris Lodewijks",
