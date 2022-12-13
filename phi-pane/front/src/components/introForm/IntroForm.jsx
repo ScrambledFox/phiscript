@@ -69,7 +69,7 @@ const IntroForm = () => {
     e.preventDefault();
 
     if (
-      (participantId === -1 || participantId > 99 || participantId < 99) &&
+      (participantId === -1 || participantId > 99) &&
       participantId !== 1337
     ) {
       enqueueSnackbar("Please enter a valid participant number");
