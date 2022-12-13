@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { addPoint } from "../../redux/researchSlice";
+import { addPoint, setXSize, setYSize } from "../../redux/researchSlice";
 
 const Wrapper = styled.div`
-  width: 1000px;
-  height: 600px;
+  width: 60vw;
+  height: 60vh;
 
   position: relative;
 
@@ -39,9 +39,15 @@ const Point = ({ showIndex, i, x, y }) => {
 
 const GenericPane = () => {
   const dispatch = useDispatch();
+  const ref = useRef();
 
   const participantData = useSelector((state) => state.participant);
   const researchData = useSelector((state) => state.research);
+
+  useEffect(() => {
+    dispatch(setXSize(ref.current.offsetWidth));
+    dispatch(setYSize(ref.current.offsetHeight));
+  }, []);
 
   const onClick = (e) => {
     if (
@@ -54,23 +60,27 @@ const GenericPane = () => {
 
     dispatch(
       addPoint({
-        x: (e.clientX - rect.left) / 1000,
-        y: (e.clientY - rect.top) / 600,
+        x: (e.clientX - rect.left) / researchData.xSize,
+        y: (e.clientY - rect.top) / researchData.ySize,
       })
     );
   };
 
   return (
     <Wrapper>
-      <div style={{ width: "100%", height: "100%" }} onClick={onClick} />
+      <div
+        ref={ref}
+        style={{ width: "100%", height: "100%" }}
+        onClick={onClick}
+      />
       {researchData.points.map((point, _index) => {
         return (
           <Point
             key={point.index}
             showIndex={researchData.currentPrompt.pointsNeeded > 1}
             i={point.index}
-            x={point.x * 1000}
-            y={point.y * 600}
+            x={point.x * researchData.xSize}
+            y={point.y * researchData.ySize}
           />
         );
       })}

@@ -15,9 +15,6 @@ import { socket } from "../../service/socket";
 import { useSnackbar } from "notistack";
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-
   text-align: center;
 `;
 
@@ -27,12 +24,13 @@ const Instruction = styled.h2``;
 
 const Buttons = styled.div`
   width: 100%;
-  margin-top: 50px;
+
+  button {
+    margin: 50px;
+  }
 `;
 
-const Submit = styled.button`
-  margin-left: 600px;
-`;
+const Submit = styled.button``;
 
 const ResearchPane = () => {
   const dispatch = useDispatch();

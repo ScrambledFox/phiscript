@@ -6,9 +6,7 @@ import ResearchPane from "./components/research/Research";
 
 import { socket } from "./service/socket";
 
-const Wrapper = styled.div`
-  height: 100vh;
-`;
+const Wrapper = styled.div``;
 
 const App = () => {
   const participant = useSelector((state) => state.participant);

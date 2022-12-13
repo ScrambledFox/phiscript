@@ -9,6 +9,9 @@ export const researchSlice = createSlice({
     currentPrompt: {},
     points: [],
     researchDone: false,
+
+    xSize: 1,
+    ySize: 1,
   },
   reducers: {
     nextPrompt: (state) => {
@@ -37,6 +40,12 @@ export const researchSlice = createSlice({
     setResearchDone: (state, action) => {
       state.researchDone = true;
     },
+    setXSize: (state, action) => {
+      state.xSize = action.payload;
+    },
+    setYSize: (state, action) => {
+      state.ySize = action.payload;
+    },
   },
 });
 
@@ -46,5 +55,7 @@ export const {
   addPoint,
   resetPoints,
   setResearchDone,
+  setXSize,
+  setYSize,
 } = researchSlice.actions;
 export default researchSlice.reducer;
