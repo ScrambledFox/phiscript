@@ -1,0 +1,189 @@
+{
+    "prompts": [
+        {
+            "type": "temporal",
+            "prompt": "At 09:00",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "At the end of the morning",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "At the end of the day",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "In August",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "At the end of the year",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "Next year",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "temporal",
+            "prompt": "During the workday",
+            "pointsNeeded": 2
+        },
+        {
+            "type": "temporal",
+            "prompt": "During summer",
+            "pointsNeeded": 2
+        },
+        {
+            "type": "temporal",
+            "prompt": "When I'm at work",
+            "pointsNeeded": 2
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I enter a room",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I enter my house",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I stand next to the tv",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I leave my home",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I'm at home",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I arrive at work",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I'm on my way to work",
+            "pointsNeeded": 2
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I stand under the living room ceiling fan",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "spatial",
+            "prompt": "When I'm near work",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Set living room lights to bright",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn on all the lights inside my home and set them to dim",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn on all the lights I have to normal brightness",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn off the lights in the toilet",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn off the kitchen spotlights",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn on the toilet lamp at regular brightness",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "light",
+            "prompt": "Turn on the wake-me-up lights",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Set the temperature of my home to very hot",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Lower the bathroom temperature",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Set to room temperature in the office",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Turn on the hearth/fireplace",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Increase the temperature in the kitchen",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "heating",
+            "prompt": "Turn off the bedroom heater",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When I am home",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When I am in my office",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When the family is home",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When we are having a party",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When It's busy in the living room",
+            "pointsNeeded": 1
+        },
+        {
+            "type": "occupation",
+            "prompt": "When no one is home",
+            "pointsNeeded": 1
+        }
+    ]
+}
